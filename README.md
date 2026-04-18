@@ -295,7 +295,7 @@ student-record-backend:abc1234
 
 * Track deployments easily
 * Rollback to previous versions
-* Maintain version history
+* Maintain version history.
 
 ---
 
