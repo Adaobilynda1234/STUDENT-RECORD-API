@@ -13,6 +13,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+        # DEBUG - remove after testing
+      - name: Debug secret
+        run: |
+          echo "Username length: ${#DOCKERHUB_USERNAME}"
+          echo "First char: ${DOCKERHUB_USERNAME:0:1}"
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+
       # 2. Install & Test Backend
       - name: Install backend dependencies
         run: |
