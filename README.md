@@ -321,7 +321,7 @@ Include:
 
 * Created Dockerfiles for frontend and backend
 * Used Nginx for production-ready frontend serving
-* Used `npm ci` for reliable dependency installation
+* Used `npm install` for dependency installation
 * Configured Docker Compose with MongoDB
 * Built CI pipeline for automated image build and push
 * Implemented tagging strategy (`latest` + commit SHA)
