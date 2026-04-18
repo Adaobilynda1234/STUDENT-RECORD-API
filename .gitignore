@@ -1,3 +1,10 @@
+#excluded node_modules and other files that should not be committed to the repository
+node_modules
+.env
+dist
+build
+npm-debug.log
+
 # Logs
 logs
 *.log

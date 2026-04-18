@@ -1,182 +1,345 @@
-# Student Record API
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)
-![Express](https://img.shields.io/badge/Express.js-000000?style=flat&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white)
-![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+# 🚀 Student Record App – Dockerized CI/CD Setup
 
-This project is a **Minor Project 1 — Express + MongoDB**, built to create and manage student records using a RESTful API.  
-It connects **Express.js** with **MongoDB** via **Mongoose** and allows full CRUD operations with basic field validation.
+## 📌 Overview
+
+This project is a full-stack CRUD application for managing student records.
+
+It has been enhanced with:
+
+* Docker containerization (frontend + backend + database)
+* Docker Compose for multi-container orchestration
+* GitHub Actions CI pipeline to automatically build and push images
+
+---
+## 🔁 Getting Started (Fork, Clone, and Setup)
+
+### 1. Fork the Repository
+
+Click the **Fork** button on the top right of the original repository to create your own copy.
+
+repo
+https://github.com/Simran-210803/STUDENT-RECORD-API
 
 ---
 
-## Goal
+### 2. Clone Your Fork
 
-Create an API to manage student data with Express and MongoDB.
-
----
-
-## Requirements
-
-- Connect Express with MongoDB using Mongoose  
-- Schema includes: **name**, **course**, **age**, **city**  
-- Routes for all CRUD operations  
-- Add basic validation for name and course  
-- Test all routes in Postman  
-
----
-
-## Schema Structure
-
-```js
-{
-  name: String,
-  course: String,
-  age: Number,
-  city: String
-}
-```
----
-
-## API ROUTES
-
-| Method     | Endpoint        | Description         |
-| ---------- | --------------- | ------------------- |
-| **GET**    | `/students`     | Fetch all students  |
-| **POST**   | `/students`     | Add a new student   |
-| **PUT**    | `/students/:id` | Update student info |
-| **DELETE** | `/students/:id` | Delete a student    |
-
----
-
-## Example POST Request (in Postman)
-```
-{
-  "name": "Simranpreet Kaur",
-  "course": "B.Tech",
-  "age": 22,
-  "city": "Bhilai"
-}
+```bash
+git clone https://github.com/Adaobilynda1234/STUDENT-RECORD-API.git
+cd STUDENT-RECORD-API
 ```
 
 ---
 
-## Project Structure
+### 3. Create a New Branch
+
+It is best practice to work on a separate branch:
+
+```bash
+git checkout -b feature/docker-setup
+```
+
+---
+
+### 4. Make Your Changes
+
+Add:
+
+* Dockerfiles (frontend & backend)
+* docker-compose.yml
+* GitHub Actions workflow
+* README updates
+
+---
+
+### 5. Commit and Push
+
+```bash
+git add .
+git commit -m "Add Docker setup and CI pipeline"
+git push origin feature/docker-setup
+```
+
+---
+
+### 6. Merge into Main Branch
+
+To trigger the CI pipeline:
+
+```bash
+git checkout main
+git merge feature/docker-setup
+git push origin main
+```
+
+---
+
+### ⚠️ Important
+
+The CI pipeline is configured to run only on the `main` branch, so make sure your final changes are merged into `main`.
+
+
+## 🧱 Tech Stack
+
+* **Frontend**: React (Create React App)
+* **Backend**: Node.js, Express
+* **Database**: MongoDB
+* **Containerization**: Docker, Docker Compose
+* **CI/CD**: GitHub Actions
+* **Web Server (Frontend)**: Nginx
+
+---
+
+## 📂 Project Structure
+
 ```
 STUDENT-RECORD-API/
-│
 ├── backend/
-│   ├── src/
-│   │   ├── config/
-│   │   │   └── db.js
-│   │   ├── models/
-│   │   │   └── student.js
-│   │   ├── routes/
-│   │   │   └── studentRoutes.js
-│   │   └── server.js
-│   ├── .env
-│   ├── package.json
-│   └── package-lock.json
-│
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   └── src/
 ├── frontend/
-│   ├── public/
-│   │   └── index.html
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── StudentForm.js
-│   │   │   └── StudentList.js
-│   │   ├── App.js
-│   │   └── index.js
-│   ├── package.json
-│   └── package-lock.json
-│
-├── .gitignore
-├── LICENSE
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   └── src/
+├── docker-compose.yml
+├── .github/
+│   └── workflows/
+│       └── docker-build.yml
 └── README.md
+```
+
+---
+
+## 🐳 Dockerization
+
+### 🔹 Backend Dockerfile
+
+**File:** `backend/Dockerfile`
+
+**Steps:**
+
+1. Use lightweight Node.js image (`node:18-alpine`)
+2. Set working directory
+3. Copy dependency files
+4. Install dependencies using `npm install`
+5. Copy source code
+6. Expose port `5000`
+7. Start server
+
+---
+
+### 🔹 Frontend Dockerfile
+
+**File:** `frontend/Dockerfile`
+
+Uses a **multi-stage build**:
+
+#### Stage 1: Build React App
+
+* Install dependencies
+* Run `npm run build`
+
+#### Stage 2: Serve with Nginx
+
+* Copy build files into Nginx
+* Serve static files on port `80`
+
+---
+
+## ❓ Why Use Nginx for React?
+
+React’s `npm start` is only for development.
+
+In production:
+
+* React builds static files (`HTML, CSS, JS`)
+* These files need a web server
+
+**Nginx is used because:**
+
+* It is fast and lightweight
+* It efficiently serves static files
+* It is the industry standard for frontend deployment
+
+---
+
+
+
+## 🧩 Docker Compose Setup
+
+**File:** `docker-compose.yml`
+
+### Services:
+
+### 1. Backend
+
+* Builds from `./backend`
+* Runs on port `5000`
+* Connects to MongoDB
+
+### 2. Frontend
+
+* Builds from `./frontend`
+* Runs on port `3000`
+* Depends on backend
+
+### 3. MongoDB
+
+* Uses official `mongo` image
+* Stores data using Docker volumes
+
+---
+
+### ⚠️ Important Note
+
+Inside Docker:
 
 ```
----
-
-## Environment Variables
-
-In your backend folder, create a .env file:
+mongodb://mongo:27017/studentdb
 ```
-PORT=5000
-MONGO_URI=your_mongodb_connection_string_here   # (MongoDB Atlas or MongoDB Compass connection)
+
+* `mongo` = service name (NOT localhost)
+* Containers communicate via service names
+
+---
+
+## ▶️ Running the App Locally
+
+```bash
+docker compose up --build
+```
+
+Access:
+
+* Frontend → http://localhost:3000
+* Backend → http://localhost:5000
+
+---
+
+## 🔁 CI/CD Pipeline (GitHub Actions)
+
+**File:** `.github/workflows/docker-build.yml`
+
+### Trigger:
+
+* Runs on every push to `main`
+
+---
+
+### 🔹 Pipeline Steps
+
+1. **Checkout Code**
+
+   * Pulls repository into runner
+
+2. **Install Dependencies**
+
+   * Backend → `npm install`
+   * Frontend → `npm install`
+
+3. **Run Test/Lint**
+
+   * Runs `npm test`
+   * Does not fail if no tests exist
+
+4. **Setup Docker Buildx**
+
+   * Enables advanced Docker builds
+
+5. **Login to Docker Hub**
+
+   * Uses GitHub secrets:
+
+     * `DOCKERHUB_USERNAME`
+     * `DOCKERHUB_TOKEN`
+
+6. **Build & Push Backend Image**
+
+   * Tags:
+
+     * `latest`
+     * commit SHA
+
+7. **Build & Push Frontend Image**
+
+   * Tags:
+
+     * `latest`
+     * commit SHA
+
+---
+
+## 🏷️ Docker Image Tagging Strategy
+
+Each image is tagged with:
+
+* **latest**
+
+  * Always points to the most recent build
+
+* **commit SHA**
+
+  * Unique identifier for each version
+
+### Example:
 
 ```
-Note: Replace your_mongodb_connection_string_here with your actual connection link.
-- For MongoDB Atlas, use your cluster connection string.
-- For MongoDB Compass (local), use something like mongodb://127.0.0.1:27017/studentDB.
----
-
-## How to Run the Project
-
-- Backend
+student-record-backend:latest
+student-record-backend:abc1234
 ```
-cd backend
-npm init -y  #creates a package.json file
-npm install
-npm run dev
-```
-- Frontend
-```
-cd frontend
-npm init -y  #creates a package.json file
-npm install
-npm run dev
-```
----
-
-## Frontend Features
-
-- Simple and clean UI for adding, editing, and deleting students
-- Input fields: name, course, age, and city
-- Basic validation for name and course
 
 ---
 
-## How It Works
+### 🎯 Benefits
 
-1. User fills the student form (Name, Course, Age, City).
-2. The data is sent to the backend API (Express server).
-3. The server validates inputs and saves the record to MongoDB using Mongoose.
-4. All records are displayed dynamically on the frontend.
-5. Users can Edit, Delete, or Add new records in real-time.
+* Track deployments easily
+* Rollback to previous versions
+* Maintain version history
 
 ---
 
-## Technologies Used
+## 🔐 GitHub Secrets Required
 
-- Node.js
-- Express.js
-- MongoDB + Mongoose
-- React.js (Frontend)
-- Postman (for API testing)
+Set in repository settings:
 
----
-
-## 🌐 **Live Demo**
-
-- **Backend (Render Hosted)**: [https://student-record-api-jp1a.onrender.com](https://student-record-api-jp1a.onrender.com)  
-  *(This is the live API endpoint — Routes can be directly tested in Postman using this base URL)*
+* `DOCKERHUB_USERNAME`
+* `DOCKERHUB_TOKEN`
 
 ---
 
-## **License**
+## 📸 Submission Requirement
 
-This project is licensed under the **MIT License** — you are free to use, modify, and distribute it with proper attribution.  
+Include:
+
+* Screenshot of successful GitHub Actions run
+* Screenshot of images in Docker Hub
 
 ---
 
-## **Author**
+## ✅ Summary of Work Done
 
-**Simranpreet Kaur**  
-- *Student Record API — Minor Project 1*  
-- simranpreet4248@gmail.com    
-- [GitHub](https://github.com/Simran-210803)
+* Created Dockerfiles for frontend and backend
+* Used Nginx for production-ready frontend serving
+* Used `npm ci` for reliable dependency installation
+* Configured Docker Compose with MongoDB
+* Built CI pipeline for automated image build and push
+* Implemented tagging strategy (`latest` + commit SHA)
 
+---
 
+## 🧠 Key Learning Points
 
+* Multi-container applications with Docker
+* CI/CD automation with GitHub Actions
+* Production vs development environments
+* Container networking (service names vs localhost)
+* Image versioning strategies
 
+---
 
+## 🏁 Conclusion
+
+This project demonstrates a complete workflow from development to deployment using modern DevOps practices, including containerization and continuous integration.
+
+---
